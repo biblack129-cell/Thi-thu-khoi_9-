@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Thi Thử Ôn Tập Giữa Kì I - Lớp 9</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-radio:checked + label {
+            background-color: #eff6ff;
+            border-color: #2563eb;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+    <!-- Header -->
+    <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="goHome()">
+                <div class="bg-white text-indigo-700 font-black px-3 py-1 rounded-lg text-xl shadow">9</div>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">HỆ THỐNG THI THỬ GIỮA KÌ I</h1>
+                    <p class="text-xs text-indigo-200" id="current-subject-label">Chọn môn thi để bắt đầu</p>
+                </div>
+            </div>
+            <div id="timer-box" class="bg-indigo-800 border border-indigo-500/30 px-4 py-1.5 rounded-xl text-right hidden">
+                <span class="text-[10px] text-indigo-200 block uppercase tracking-wider">Thời gian còn lại</span>
+                <span id="timer" class="font-mono text-xl font-bold text-amber-300">45:00</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 mt-8">
+        <!-- Dashboard / Main Menu Screen -->
+        <div id="menu-screen" class="bg-white rounded-2xl shadow-sm p-6 border border-slate-200">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <h2 class="text-2xl font-black text-slate-800">DANH SÁCH MÔN THI THỬ</h2>
+                <p class="text-sm text-slate-500 mt-2">Vui lòng chọn môn học bạn muốn ôn luyện. Hệ thống sẽ tự động bấm giờ 45 phút và chấm điểm trực tiếp sau khi nộp bài.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Card Tin Học -->
+                <div class="border-2 border-slate-100 hover:border-blue-500 rounded-2xl p-6 transition duration-300 hover:shadow-xl bg-gradient-to-br from-white to-blue-50/30 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">Tin Học 9</span>
+                            <span class="text-xs text-slate-400 font-medium">⏱️ 45 Phút</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Đề cương Tin học Giữa kì I</h3>
+                        <ul class="text-xs text-slate-600 space-y-1.5 mb-6">
+                            <li>• <strong>Phần I:</strong> 24 câu trắc nghiệm (3.0 điểm)</li>
+                            <li>• <strong>Phần II:</strong> 8 câu Đúng/Sai - 32 ý (4.0 điểm)</li>
+                            <li>• <strong>Phần III:</strong> 4 câu tự luận (3.0 điểm)</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectSubject('tin')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition">
+                        BẮT ĐẦU THI TIN HỌC
+                    </button>
+                </div>
+
+                <!-- Card Địa Lý -->
+                <div class="border-2 border-slate-100 hover:border-emerald-500 rounded-2xl p-6 transition duration-300 hover:shadow-xl bg-gradient-to-br from-white to-emerald-50/30 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">Địa Lý 9</span>
+                            <span class="text-xs text-slate-400 font-medium">⏱️ 45 Phút</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Đề ôn tập Địa lý Giữa kì I</h3>
+                        <ul class="text-xs text-slate-600 space-y-1.5 mb-6">
+                            <li>• <strong>Phần I:</strong> 12 câu trắc nghiệm nhiều lựa chọn</li>
+                            <li>• <strong>Phần II:</strong> 4 câu Đúng/Sai</li>
+                            <li>• <strong>Phần III:</strong> Câu hỏi tự luận & Tự luận mở rộng</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectSubject('dia')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition">
+                        BẮT ĐẦU THI ĐỊA LÝ
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Screen -->
+        <form id="exam-form" class="hidden">
+            <!-- Navigation Action Top bar -->
+            <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <button type="button" onclick="goHome()" class="text-xs font-bold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+                    ← Đổi môn thi khác
+                </button>
+                <span id="exam-title-badge" class="font-bold text-sm text-indigo-700 uppercase"></span>
+            </div>
+
+            <!-- PART I -->
+            <section class="mb-8">
+                <div class="bg-indigo-600 text-white p-4 rounded-t-xl font-bold text-lg flex justify-between items-center">
+                    <span>PHẦN I. TRẮC NGHIỆM NHIỀU LỰA CHỌN</span>
+                </div>
+                <div id="part1-container" class="bg-white border-x border-b border-slate-200 rounded-b-xl p-6 space-y-6"></div>
+            </section>
+
+            <!-- PART II -->
+            <section class="mb-8">
+                <div class="bg-emerald-600 text-white p-4 rounded-t-xl font-bold text-lg flex justify-between items-center">
+                    <span>PHẦN II. TRẮC NGHIỆM ĐÚNG / SAI</span>
+                </div>
+                <div id="part2-container" class="bg-white border-x border-b border-slate-200 rounded-b-xl p-6 space-y-8"></div>
+            </section>
+
+            <!-- PART III -->
+            <section class="mb-8" id="part3-section">
+                <div class="bg-amber-600 text-white p-4 rounded-t-xl font-bold text-lg flex justify-between items-center">
+                    <span>PHẦN III. TỰ LUẬN & TÍNH TOÁN SỐ LIỆU</span>
+                </div>
+                <div id="part3-container" class="bg-white border-x border-b border-slate-200 rounded-b-xl p-6 space-y-8"></div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="text-center py-6">
+                <button type="button" onclick="submitExam()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-lg px-12 py-4 rounded-xl shadow-xl transition transform hover:-translate-y-0.5">
+                    NỘP BÀI VÀ CHẤM ĐIỂM
+                </button>
+            </div>
+        </form>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden bg-white rounded-2xl shadow-xl p-8 border border-slate-200 mb-12">
+            <h2 class="text-3xl font-black text-center text-slate-800 mb-2">KẾT QUẢ THI THỬ</h2>
+            <p id="result-subject-name" class="text-center text-slate-500 font-semibold mb-8"></p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-8">
+                <div class="text-center bg-indigo-50 border border-indigo-200 p-6 rounded-2xl">
+                    <span class="text-xs text-indigo-700 font-bold block uppercase tracking-wider">ĐIỂM TRẮC NGHIỆM</span>
+                    <span id="final-score" class="text-4xl font-extrabold text-indigo-600 mt-2 block">0.0</span>
+                </div>
+                <div class="text-center bg-slate-50 border border-slate-200 p-6 rounded-2xl">
+                    <span class="text-xs text-slate-500 font-bold block uppercase tracking-wider">ĐÚNG PHẦN I</span>
+                    <span id="p1-correct" class="text-3xl font-bold text-slate-700 mt-2 block">0</span>
+                </div>
+                <div class="text-center bg-slate-50 border border-slate-200 p-6 rounded-2xl">
+                    <span class="text-xs text-slate-500 font-bold block uppercase tracking-wider">ĐÚNG PHẦN II</span>
+                    <span id="p2-correct" class="text-3xl font-bold text-slate-700 mt-2 block">0</span>
+                </div>
+            </div>
+            
+            <p class="text-center text-xs text-slate-500 mb-8 max-w-xl mx-auto leading-relaxed">
+                * Lưu ý: Kết quả trắc nghiệm được chấm tự động. Đáp án chi tiết và gợi ý phần tự luận đã được mở khóa ngay bên dưới để bạn rà soát và rút kinh nghiệm.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button onclick="retryExam()" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-3 rounded-xl shadow transition">
+                    🔄 THI LẠI ĐỂ GỠ ĐIỂM
+                </button>
+                <button onclick="goHome()" class="w-full sm:w-auto bg-slate-700 hover:bg-slate-800 text-white font-bold px-8 py-3 rounded-xl shadow transition">
+                    🏠 CHỌN MÔN THI KHÁC
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data Tin Học 9
+        const tinData = {
+            title: "Môn Tin Học 9 - Giữa Kì 1",
+            p1: [
+                { q: "Câu 1: Bộ xử lý thông tin trong máy tính có chức năng gì?", options: ["Lưu trữ dữ liệu.", "Xử lý và thực hiện các lệnh trên dữ liệu.", "Kết nối Internet.", "Hiển thị thông tin ra màn hình."], ans: 1 },
+                { q: "Câu 2: Trong đô thị, thiết bị nào sau đây được gắn bộ xử lí thông tin để điều khiển việc lưu thông, giúp cho các phương tiện trên đường phố di chuyển một cách có trật tự?", options: ["Đèn giao thông.", "Xe ô tô tự lái.", "Camera an ninh.", "Biển báo giao thông."], ans: 0 },
+                { q: "Câu 3: Bằng cách nào công nghệ thông tin có những tác động mạnh mẽ đối với giáo dục?", options: ["Giúp cho việc chuyển giao và tiếp cận thông tin trở nên dễ dàng.", "Động viên, khuyến khích mọi người tham gia vào xã hội học tập.", "Hỗ trợ tính toán nhanh chóng và chính xác, không cần tính nhẩm.", "Giúp cho việc đánh giá kết quả học tập trở nên công bằng hơn."], ans: 0 },
+                { q: "Câu 4: Em hãy cho biết câu hỏi: “Thông tin được công bố khi nào?” được sử dụng để kiểm tra tiêu chí nào của chất lượng thông tin?", options: ["Tính mới.", "Tính chính xác.", "Tính đầy đủ.", "Tính sử dụng được."], ans: 0 },
+                { q: "Câu 5: Vai trò quan trọng nhất của thông tin trong giải quyết vấn đề là gì?", options: ["Làm tăng số lượng dữ liệu được xử lý.", "Giảm thiểu công việc tìm kiếm thông tin.", "Tăng khả năng truy cập Internet.", "Làm cơ sở để đưa ra các quyết định đúng đắn."], ans: 3 },
+                { q: "Câu 6: Nguồn thông tin đáng tin cậy để tìm hiểu thông tin về kì thi tuyển sinh lớp 10 là:", options: ["mạng xã hội.", "trang web của Bộ Thông tin và Truyền thông.", "trang web của Sở Giáo dục và Đào tạo.", "thông tin từ bạn bè."], ans: 2 },
+                { q: "Câu 7: Công nghệ kĩ thuật số có tác động tiêu cực đến quyền riêng tư như thế nào?", options: ["Gây mất ngủ.", "Thông tin cá nhân có thể bị rò rỉ và sử dụng bất hợp pháp.", "Gây nghiện Internet.", "Ít giao tiếp."], ans: 1 },
+                { q: "Câu 8: Phương án nào sau đây không phải là tác động tiêu cực của công nghệ kĩ thuật số đến đời sống con người?", options: ["Cung cấp các công cụ giáo dục tiên tiến.", "Nhờ trí tuệ nhân tạo làm bài tập về nhà.", "Thiết bị số nhanh chóng trở nên lỗi thời.", "Người dân ở các vùng khó khăn ngày càng tụt hậu."], ans: 0 },
+                { q: "Câu 9: Em sẽ làm gì để tránh các tác động tiêu cực của việc sử dụng công nghệ kĩ thuật số?", options: ["Chia sẻ thông tin chưa được kiểm chứng.", "Sử dụng phần mềm không có bản quyền.", "Sử dụng công nghệ kĩ thuật số giả danh tạo trang quảng cáo kiếm tiền.", "Sử dụng công nghệ kĩ thuật số một cách hiệu quả, không vi phạm pháp luật."], ans: 3 },
+                { q: "Câu 10: Phần mềm Crocodile Physics mô phỏng lĩnh vực nào?", options: ["Hoá học.", "Vật lý.", "Sinh học.", "Tin học."], ans: 1 },
+                { q: "Câu 11: Hãy cho biết phần mềm nào dưới đây là phần mềm trực tuyến, mô phỏng những thí nghiệm khoa học tự nhiên.", options: ["Flowgorithm.", "ChemLab.", "GeoGebra.", "PhET simulations."], ans: 3 },
+                { q: "Câu 12: Tại sao phần mềm mô phỏng có thể giúp tìm hiểu, nghiên cứu hoạt động của một đối tượng một cách toàn diện hơn so với trải nghiệm trong thực tế?", options: ["Phần mềm mô phỏng có thể tạo ra nhiều tình huống để nghiên cứu đối tượng một cách đầy đủ.", "Phần mềm mô phỏng có chi phí thấp nên có điều kiện để thực hiện nhiều lần.", "Phần mềm mô phỏng không gây ra nguy hiểm nên người dùng có thể thực hiện nhiều lần.", "Phần mềm mô phỏng thân thiện nên được người dùng yêu thích, hứng thú trải nghiệm."], ans: 0 },
+                { q: "Câu 13: Robot lắp ráp là thiết bị có gắn bộ xử lí được sử dụng trong lĩnh vực nào?", options: ["Công nghiệp.", "Giao thông.", "Xây dựng.", "Giải trí."], ans: 0 },
+                { q: "Câu 14: Thiết bị nào sau đây không được gắn bộ xử lí thông tin?", options: ["Máy giặt.", "Máy rửa bát.", "Robot hút bụi.", "Máy khoan cầm tay."], ans: 3 },
+                { q: "Câu 15: Phương án nào sau đây không phải là tác động tích cực của công nghệ thông tin lên giáo dục?", options: ["Cổ vũ thái độ sống tích cực.", "Mở rộng phạm vi tiếp cận giáo dục.", "Rút ngắn khoảng cách, kết nối con người nhanh chóng.", "Dễ dàng chia sẻ kiến thức, kĩ năng."], ans: 0 },
+                { q: "Câu 16: Tính chính xác của thông tin thể hiện điều gì?", options: ["Thể hiện thông tin đã bị lỗi thời chưa.", "Thể hiện tính đúng đắn của thông tin.", "Thể hiện tính phù hợp của thông tin với vấn đề hay câu hỏi được đặt ra.", "Thể hiện sự bao quát nhiều khía cạnh, cho em có được cái nhìn tổng thể về vấn đề được đặt ra."], ans: 1 },
+                { q: "Câu 17: Vai trò của chất lượng thông tin trong giải quyết vấn đề là gì?", options: ["Làm tăng số lượng dữ liệu được xử lý.", "Giảm thiểu công việc tìm kiếm thông tin.", "Tăng khả năng truy cập Internet.", "Làm cơ sở để đưa ra các quyết định đúng đắn."], ans: 3 },
+                { q: "Câu 18: Nhà quản lí căn cứ vào danh sách nhân viên vắng mặt không lí do trong một ngày để tiến hành đánh giá về chuyên cần và thái độ làm việc của nhân viên. Thông tin nhà quản lí đã vi phạm yếu tố nào của chất lượng thông tin trong đánh giá nhân viên?", options: ["Tính mới.", "Tính chính xác.", "Tính đầy đủ.", "Tính sử dụng được."], ans: 2 },
+                { q: "Câu 19: Công nghệ kĩ thuật số có tác động tiêu cực đến môi trường như thế nào?", options: ["Nguy cơ thất nghiệp tăng.", "Tổn hại thị lực.", "Giúp tiết kiệm thời gian di chuyển.", "Tạo ra rác thải điện tử."], ans: 3 },
+                { q: "Câu 20: Công nghệ kĩ thuật số có tác động tiêu cực đến sức khoẻ thể chất của con người như thế nào?", options: ["Gây ra bệnh khô mắt và giảm thị lực.", "Những mối quan hệ xã hội bị ảnh hưởng.", "Dễ có những cảm xúc tiêu cực.", "Cổ xuý lối sống thiếu đạo đức."], ans: 0 },
+                { q: "Câu 21: Minh tự ý đăng địa chỉ nhà của An lên mạng xã hội là", options: ["hành vi vi phạm pháp luật liên quan đến sở hữu trí tuệ, sở hữu tài sản, đánh bạc,...", "hành vi vi phạm quyền, uy tín của tổ chức.", "hành vi vi phạm an ninh quốc gia, trật tự, an toàn xã hội.", "hành vi vi phạm đến việc bảo đảm an toàn thông tin trên không gian mạng."], ans: 3 },
+                { q: "Câu 22: Phần mềm mô phỏng pha màu trực tuyến là", options: ["https://mixcolors.com.", "https://trycolors.com.", "https://simulatecolors.com.", "https://colors.com."], ans: 1 },
+                { q: "Câu 23: Phần mềm mô phỏng nào giúp em vẽ các hình hình học và giải toán?", options: ["GeoGebra.", "Crocodile Physics.", "Flowgorithm.", "ChemLab."], ans: 0 },
+                { q: "Câu 24: Phần mềm trực tuyến https://physics.weber.edu/schroeder/md giúp em làm gì?", options: ["Chạy thử thuật toán dạng sơ đồ khối trước khi cài đặt trong ngôn ngữ lập trình.", "Mô phỏng thí nghiệm vật lí.", "Nghiên cứu và xây dựng các giải pháp giao thông nhằm giảm bớt hiện tượng tắc nghẽn giao thông trong các thành phố.", "Nghiên cứu chuyển động và tương tác giữa các phân tử trong những điều kiện khác nhau."], ans: 3 }
+            ],
+            p2: [
+                {
+                    title: "Câu 1: Cho các nhận định sau đây về ứng dụng máy tính trong y tế:",
+                    items: [
+                        { text: "a) Máy tính có thể phân tích hình ảnh y tế như X-quang, siêu âm để phát hiện các dấu hiệu bệnh sớm hơn.", ans: true },
+                        { text: "b) Robot phẫu thuật có thể thực hiện các ca phẫu thuật phức tạp với độ chính xác cao hơn so với bác sĩ. Tuy nhiên Robot không hoàn toàn thay thế Bác Sĩ.", ans: true },
+                        { text: "c) Các ứng dụng y tế trên điện thoại thông minh có thể giúp người dùng tự chẩn đoán chính xác bệnh tại nhà.", ans: false },
+                        { text: "d) Dữ liệu y tế của bệnh nhân được lưu trữ trên máy tính hoàn toàn an toàn và không có nguy cơ bị xâm nhập.", ans: false }
+                    ]
+                },
+                {
+                    title: "Câu 2: Nhận định về chất lượng thông tin trong giải quyết vấn đề:",
+                    items: [
+                        { text: "a) Thông tin càng chính xác thì kết quả giải quyết vấn đề càng tin cậy.", ans: true },
+                        { text: "b) Thông tin không cần đúng, chỉ cần nhiều là đủ để giải quyết vấn đề.", ans: false },
+                        { text: "c) Nếu thông tin sai lệch, quá trình xử lý có thể đưa ra kết quả sai.", ans: true },
+                        { text: "d) Khi lập kế hoạch học tập, em chỉ cần chọn bất kỳ thông tin nào trên mạng cũng sẽ luôn đúng.", ans: false }
+                    ]
+                },
+                {
+                    title: "Câu 3: Nhận định về các hành vi vi phạm pháp luật trong môi trường số:",
+                    items: [
+                        { text: "a) Tải nhạc, phim, phần mềm lậu từ các trang web không chính thống.", ans: true },
+                        { text: "b) Đăng tải thông tin sai sự thật, bịa đặt trên mạng xã hội.", ans: true },
+                        { text: "c) Bình luận khiếm nhã, xúc phạm người khác trên các diễn đàn trực tuyến là hành vi thiếu văn hóa.", ans: true },
+                        { text: "d) Chia sẻ hình ảnh, video cá nhân của bạn bè mà chưa xin phép, nhằm cảnh báo các em về nguy cơ mất an toàn trên mạng.", ans: true }
+                    ]
+                },
+                {
+                    title: "Câu 4: Nhận định về lợi ích của phần mềm mô phỏng:",
+                    items: [
+                        { text: "a) Giúp học sinh quan sát được những hiện tượng, quá trình khó nhìn thấy trực tiếp trong thực tế.", ans: true },
+                        { text: "b) Luôn thay thế hoàn toàn cho các thí nghiệm và trải nghiệm thực tế.", ans: false },
+                        { text: "c) Giảm khả năng hiểu bài nhờ hình ảnh, âm thanh sinh động phức tạp.", ans: false },
+                        { text: "d) Cho phép học sinh luyện tập nhiều lần, rút kinh nghiệm trước khi áp dụng vào thực tế.", ans: true }
+                    ]
+                },
+                {
+                    title: "Câu 5: Nhận định về thiết bị có gắn bộ xử lý thông tin:",
+                    items: [
+                        { text: "a) Đèn giao thông thông minh có gắn bộ xử lý thông tin để điều chỉnh 
+                          
